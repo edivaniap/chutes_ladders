@@ -1,5 +1,7 @@
 programa
 {
+	inclua biblioteca Util --> u
+	
 	const caracter ESCADA_INI = '#'
 	const caracter ESCADA_FIM = '¨'
 	const caracter RAMPA_INI = '/'
@@ -48,8 +50,9 @@ programa
 	 * - retorno: resultado dos dados
 	 */
 	funcao inteiro jogar_dados() {
-		//desenvolver
-		retorne -1
+		inteiro dado = 0
+		dado = u.sorteia(1, 6)
+		retorne dado
 	}
 }
 /* $$$ Portugol Studio $$$ 
@@ -57,7 +60,7 @@ programa
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
  * 
- * @POSICAO-CURSOR = 140; 
+ * @POSICAO-CURSOR = 868; 
  * @PONTOS-DE-PARADA = ;
  * @SIMBOLOS-INSPECIONADOS = ;
  * @FILTRO-ARVORE-TIPOS-DE-DADO = inteiro, real, logico, cadeia, caracter, vazio;
