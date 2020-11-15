@@ -1,6 +1,7 @@
 programa
 {
 	inclua biblioteca Util --> u
+	inclua biblioteca Texto --> tx
 	
 	const caracter ESCADA_INI = '#'
 	const caracter ESCADA_FIM = '¨'
@@ -11,17 +12,13 @@ programa
 	const inteiro MAX_ESCADA = 9
 	const inteiro MAX_RAMPA = 10
 	const inteiro TAM_TABULEIRO = 100
-	const inteiro MAX_JOGADORES = 4
 	
 	//posições das escadas e rampas já predefinidas
 	inteiro escadas[MAX_ESCADA][2] = {{5,14},{12,31}, {20,38},{28,84},{36,44},{40,42},{51,67},{71,91},{80,100}}
 	inteiro rampas[MAX_RAMPA][2] = {{98,78},{95,75},{92,73},{87,24},{64,60},{62,19},{56,53},{49,11},{47,26},{16,6}}
-		
-	cadeia jogadores[MAX_JOGADORES]
-	inteiro posicao_jogadores[MAX_JOGADORES]
-	inteiro n_jogadores, n_dados
-	
-	inteiro posicao_j1, posicao_j2, rodada_atual, vitorias_j1, vitorias_j2
+
+	cadeia jogador1, jogador2, representa_j1, representa_j2
+	inteiro posicao_j1,posicao_j2, vitoria_j1, vitoria_j2, rodada_atual
 	
 	funcao inicio()
 	{
@@ -38,77 +35,64 @@ programa
 	/* Inicializa os dados do jogo
 	 */
 	funcao vazio inicializar_jogo() {
-		posicao_j1 = 0
-		posicao_j2 = 0
-		rodada_atual = 0
+		//iniciar variaveis para cada partida
 	}
 
 	/* 
 	 */
 	funcao vazio processo_inicial() {
-		escreva("Para jogar Chutes and Ladders é necessário 2 a ", MAX_JOGADORES," jogadores e 1 ou 2 dados.\n")
+		escreva("Para jogar Chutes and Ladders é necessário 2 jogadores\n")
 		
-		faca {
-			escreva(">> Informe o número de jogadadores (2 a ", MAX_JOGADORES,"): ")
-			leia(n_jogadores)
-		} enquanto(n_jogadores < 2 ou n_jogadores > MAX_JOGADORES)
-		
-		para(inteiro i = 0; i < n_jogadores; i++) {
-			escreva(">> Informe o nome do jogadador (", (i+1),"): ")
-			leia(jogadores[i])
-		}
+		escreva(">> Informe o nome de um dos jogadadores: ")
+			leia(jogador1)
+			
+		escreva(">> Informe o nome do outro jogadador: ")
+			leia(jogador2)
 
-		faca {
-			escreva(">> Informe com quantos dados vocês querem jogar (1 ou 2): ")
-			leia(n_dados)
-		} enquanto(n_dados < 1 ou n_dados > 2)
 
 		limpa()
 		ordem_jogadores()
+
+		//representacao dos jogadores no tabuleiro
+		se(tx.obter_caracter(jogador1, 0) == tx.obter_caracter(jogador2, 0)) {
+			representa_j1 = tx.obter_caracter(jogador1, 0) + "1"
+			representa_j2 = tx.obter_caracter(jogador2, 0) + "2"
+		} senao {
+			representa_j1 = tx.obter_caracter(jogador1, 0) + " "
+			representa_j2 = tx.obter_caracter(jogador2, 0) + " "
+		}
+		
 	}
 
 	funcao vazio ordem_jogadores() {
+		logico empate
+		
 		escreva("Agora, vamos definir a ordem que cada jogador irá jogar\n")
 
-		inteiro resultado_dados[MAX_JOGADORES]
-
-		//jogando os dados
-		para(inteiro i = 0; i < n_jogadores; i++) {
-			escreva(">> ", jogadores[i], ", aperte Enter para jogar o(s) dado(s).")
+		faca {
+			inteiro d1, d2
+			escreva(">> ", jogador1, ", aperte Enter para jogar o dado.")
 			esperar_enter()
-			resultado_dados[i] = u.sorteia(1,3) //substiuir por funcao de jogar dados
-			escreva("Resultado do(s) dado(s): ", resultado_dados[i], "\n")
-
-			//compara resultado do jogador atual com os anteriores
-			para(inteiro j = i-1; j >= 0; j--) {
-				se(resultado_dados[i] == resultado_dados[j]) {
-					escreva(jogadores[i], ", você jogará o dado novamente, pois teve resultado igual ao de ", jogadores[j], "!\n")
-					i-- // faz jogador atual jogar dados mais uma vez
-					j = -1 // interrompe este 'for
-				}
+			d1 = u.sorteia(1, 3) //SUBSTITUIR POR FUNCAO JOGAR DAD0S
+			escreva("Resultado do dado: ", d1, "\n")
+			escreva(">> ", jogador2, ", aperte Enter para jogar o dado.")
+			esperar_enter()
+			d2 = u.sorteia(1, 3)//SUBSTITUIR POR FUNCAO JOGAR DAD0S
+			escreva("Resultado do dado: ", d2, "\n")
+			
+			empate = falso
+			
+			se(d1 == d2) {
+				escreva("Empate! Vamos tentar de novo...\n") 
+				empate = verdadeiro
+			} senao se (d1 < d2) {
+				cadeia aux = jogador1
+				jogador1 = jogador2
+				jogador2 = aux
 			}
-		}
+		} enquanto(empate)
 
-		//ordenando os jogadores
-		para(inteiro i = 0; i < n_jogadores; i++) {
-			para(inteiro j = i+1; j < n_jogadores; j++) {
-				se(resultado_dados[i] < resultado_dados[j]) {
-					inteiro aux_dado = resultado_dados[i]
-					cadeia aux_nome = jogadores[i]
-					
-					resultado_dados[i] = resultado_dados[j]
-					jogadores[i] = jogadores[j]
-					
-					resultado_dados[j] = aux_dado
-					jogadores[j] = aux_nome
-				}
-			}
-		}
-
-		escreva("\n Assim, a ordem de jogadas é:\n")
-		para(inteiro i = 0; i < n_jogadores; i++) {
-			escreva("* ", (i+1),"º ", jogadores[i],"\n")
-		}
+		escreva("\n Assim, a ordem de jogadas será: 1º, ", jogador1,", 2º ", jogador2, "\n")
 	}
 
 	funcao vazio esperar_enter() {
@@ -142,7 +126,7 @@ programa
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
  * 
- * @POSICAO-CURSOR = 317; 
+ * @POSICAO-CURSOR = 1635; 
  * @PONTOS-DE-PARADA = ;
  * @SIMBOLOS-INSPECIONADOS = ;
  * @FILTRO-ARVORE-TIPOS-DE-DADO = inteiro, real, logico, cadeia, caracter, vazio;
