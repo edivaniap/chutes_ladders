@@ -73,11 +73,11 @@ programa
 			inteiro d1, d2
 			escreva(">> ", jogador1, ", aperte Enter para jogar o dado.")
 			esperar_enter()
-			d1 = u.sorteia(1, 3) //SUBSTITUIR POR FUNCAO JOGAR DAD0S
+			d1 = jogar_dados() //SUBSTITUIR POR FUNCAO JOGAR DAD0S
 			escreva("Resultado do dado: ", d1, "\n")
 			escreva(">> ", jogador2, ", aperte Enter para jogar o dado.")
 			esperar_enter()
-			d2 = u.sorteia(1, 3)//SUBSTITUIR POR FUNCAO JOGAR DAD0S
+			d2 = jogar_dados()//SUBSTITUIR POR FUNCAO JOGAR DAD0S
 			escreva("Resultado do dado: ", d2, "\n")
 			
 			empate = falso
@@ -102,7 +102,7 @@ programa
 	
 	/* 
 	 */
-	funcao vazio porcessa_rodada() {
+	funcao vazio processa_rodada() {
 		//desenvolver
 	}
 
@@ -126,9 +126,8 @@ programa
  * 
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
-
- * @POSICAO-CURSOR = 1635; 
-
+ * 
+ * @POSICAO-CURSOR = 2594; 
  * @PONTOS-DE-PARADA = ;
  * @SIMBOLOS-INSPECIONADOS = ;
  * @FILTRO-ARVORE-TIPOS-DE-DADO = inteiro, real, logico, cadeia, caracter, vazio;
