@@ -117,16 +117,18 @@ programa
 	 * - retorno: resultado dos dados
 	 */
 	funcao inteiro jogar_dados() {
-		//desenvolver
-		retorne -1
+		inteiro dado = 0
+		dado = u.sorteia(1, 6)
+		retorne dado
 	}
 }
 /* $$$ Portugol Studio $$$ 
  * 
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
- * 
+
  * @POSICAO-CURSOR = 1635; 
+
  * @PONTOS-DE-PARADA = ;
  * @SIMBOLOS-INSPECIONADOS = ;
  * @FILTRO-ARVORE-TIPOS-DE-DADO = inteiro, real, logico, cadeia, caracter, vazio;
