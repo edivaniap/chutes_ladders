@@ -18,11 +18,14 @@ programa
 	inteiro rampas[MAX_RAMPA][2] = {{98,78},{95,75},{92,73},{87,24},{64,60},{62,19},{56,53},{49,11},{47,26},{16,6}}
 
 	cadeia jogador1, jogador2, representa_j1, representa_j2
-	inteiro posicao_j1,posicao_j2, vitoria_j1, vitoria_j2, rodada_atual
+	inteiro posicao_j1,posicao_j2, vitoria_j1, vitoria_j2, empates, rodada_atual
 	
 	funcao inicio()
 	{
+		inicializar_jogo()
 		processo_inicial()
+		game_over()
+		
 	}
 
 	/*
@@ -36,6 +39,12 @@ programa
 	 */
 	funcao vazio inicializar_jogo() {
 		//iniciar variaveis para cada partida
+		posicao_j1 = 0;
+		posicao_j2 = 0;
+		vitoria_j1 = 0;
+		vitoria_j2 = 0;
+		empates = 0;
+		rodada_atual = 0;
 	}
 
 	/* 
@@ -73,11 +82,11 @@ programa
 			inteiro d1, d2
 			escreva(">> ", jogador1, ", aperte Enter para jogar o dado.")
 			esperar_enter()
-			d1 = jogar_dados() //SUBSTITUIR POR FUNCAO JOGAR DAD0S
+			d1 = jogar_dados()
 			escreva("Resultado do dado: ", d1, "\n")
 			escreva(">> ", jogador2, ", aperte Enter para jogar o dado.")
 			esperar_enter()
-			d2 = jogar_dados()//SUBSTITUIR POR FUNCAO JOGAR DAD0S
+			d2 = jogar_dados()
 			escreva("Resultado do dado: ", d2, "\n")
 			
 			empate = falso
@@ -109,7 +118,26 @@ programa
 	/* Verifica se o jogo acabou
 	 */
 	funcao logico game_over() {
-		//desenvolver
+		//Não está completo
+		se(posicao_j1 == 100 ou posicao_j2 == 100)
+		{
+			se(posicao_j1 == 100 e posicao_j2 == 100)
+			{
+				escreva("Empate!")
+				empates++;
+			}
+			senao se(posicao_j1 == 100)
+			{
+				escreva("Vitória de " + jogador1 + "!!")
+				vitoria_j1++;
+			}
+			senao
+			{
+				escreva("Vitória de " + jogador2 + "!!")
+				vitoria_j2++;
+			}
+			retorne verdadeiro
+		}
 		retorne falso
 	}
 	
@@ -127,7 +155,7 @@ programa
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
  * 
- * @POSICAO-CURSOR = 2594; 
+ * @POSICAO-CURSOR = 2800; 
  * @PONTOS-DE-PARADA = ;
  * @SIMBOLOS-INSPECIONADOS = ;
  * @FILTRO-ARVORE-TIPOS-DE-DADO = inteiro, real, logico, cadeia, caracter, vazio;
