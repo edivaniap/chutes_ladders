@@ -19,7 +19,7 @@ programa
 	{
 		inicializar_jogo()
 		processo_inicial()
-    		esperar_enter()
+    esperar_enter()
 		imprimir_tabuleiro()
 	}
 	
