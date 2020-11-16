@@ -15,16 +15,17 @@ programa
 	inteiro escadas[MAX_ESCADA][2] = {{5,14},{12,31}, {20,38},{28,84},{36,44},{40,42},{51,67},{71,91},{80,100}}
 	inteiro rampas[MAX_RAMPA][2] = {{98,78},{95,75},{92,73},{87,24},{64,60},{62,19},{56,53},{49,11},{47,26},{16,6}}
 
-	cadeia jogador1, jogador2, representa_j1, representa_j2, ordem1, ordem2
+	cadeia jogador1, jogador2, representa_j1, representa_j2
 	inteiro posicao_j1, posicao_j2, vitoria_j1, vitoria_j2, empates, rodada_atual, d1, d2, primeiro_a_jogar
 	
 	funcao inicio()
 	{
 		inicializar_jogo()
+		processo_inicial()
 		faca
 		{
 			inicializar_partida()
-			processo_inicial()
+			ordem_jogadores()
 			processa_rodada()
 		}
 		enquanto(jogar_novamente())
@@ -47,15 +48,12 @@ programa
 	}
 
 	funcao vazio inicializar_partida(){
-		//iniciar variaveis para cada partida
-		
+		//iniciar variaveis para cada partida	
 		posicao_j1 = 1
 		posicao_j2 = 1
 		rodada_atual = 0
 		d1 = 0
 		d2 = 0
-		ordem1 = ""
-		ordem2 = ""
 		primeiro_a_jogar = 0
 	}
 
@@ -70,10 +68,6 @@ programa
 		escreva(">> Informe o nome do outro jogadador: ")
 			leia(jogador2)
 
-
-		limpa()
-		ordem_jogadores()
-
 		//representacao dos jogadores no tabuleiro
 		se(tx.obter_caracter(jogador1, 0) == tx.obter_caracter(jogador2, 0)) {
 			representa_j1 = tx.obter_caracter(jogador1, 0) + "1"
@@ -82,13 +76,12 @@ programa
 			representa_j1 = tx.obter_caracter(jogador1, 0) + " "
 			representa_j2 = tx.obter_caracter(jogador2, 0) + " "
 		}
-		escreva(">> Aperte Enter para iniciar a partida!.")
-		esperar_enter()
+		
 	}
 
 	funcao vazio ordem_jogadores() {
 		logico empate
-		
+		limpa()
 		escreva("Agora, vamos definir a ordem que cada jogador irá jogar\n\n")
 
 		faca {
@@ -108,12 +101,15 @@ programa
 				empate = verdadeiro
 			} senao se (d1 < d2) {
 				primeiro_a_jogar = 2
+				escreva("\nAssim, a ordem de jogadas será: 1º ", jogador2,", 2º ", jogador1, "\n")
 			} senao { 
 				primeiro_a_jogar = 1
+				escreva("\nAssim, a ordem de jogadas será: 1º ", jogador2,", 2º ", jogador1, "\n")
 			}
 		} enquanto(empate)
-
-		escreva("\n Assim, a ordem de jogadas será: 1º ", jogador1,", 2º ", jogador2, "\n")
+		
+		escreva(">> Aperte Enter para iniciar a partida!")
+		esperar_enter()
 	}
 
 	funcao vazio esperar_enter() {
@@ -129,10 +125,12 @@ programa
 		{
 			limpa()
 			imprimir_tabuleiro()
+				
 			rodada_atual++;
 			
-			escreva("=== RODADA ", rodada_atual, " ===\n")
+			
 			se(primeiro_a_jogar == 1) {
+				escreva("=== RODADA ", rodada_atual, " ===\n")
 				escreva(">> ", jogador1, " (", posicao_j1,") aperte Enter para jogar o dado.")
 				esperar_enter()
 				d1 = jogar_dados()
@@ -144,6 +142,16 @@ programa
 				
 				limpa()
 				imprimir_tabuleiro()
+
+				escreva("=== RODADA ", rodada_atual, " ===\n")
+				escreva(">> ", jogador2, " (", posicao_j2,") aperte Enter para jogar o dado.")
+				esperar_enter()
+				d2 = jogar_dados()
+				escreva("Resultado do dado: ", d2, "\n")
+				posicao_j2 += d2
+				posicao_j2 = checar_rampas_escadas(posicao_j2)
+				escreva(">> Aperte Enter andar as posições no tabuleiro.")
+				esperar_enter()
 			} senao se (primeiro_a_jogar == 2){
 				escreva("=== RODADA ", rodada_atual, " ===\n")
 				escreva(">> ", jogador2, " (", posicao_j2,") aperte Enter para jogar o dado.")
@@ -152,6 +160,19 @@ programa
 				escreva("Resultado do dado: ", d2, "\n")
 				posicao_j2 += d2
 				posicao_j2 = checar_rampas_escadas(posicao_j2)
+				escreva(">> Aperte Enter andar as posições no tabuleiro.")
+				esperar_enter()
+				
+				limpa()
+				imprimir_tabuleiro()
+				
+				escreva("=== RODADA ", rodada_atual, " ===\n")
+				escreva(">> ", jogador1, " (", posicao_j1,") aperte Enter para jogar o dado.")
+				esperar_enter()
+				d1 = jogar_dados()
+				escreva("Resultado do dado: ", d1, "\n")
+				posicao_j1 += d1
+				posicao_j1 = checar_rampas_escadas(posicao_j1)
 				escreva(">> Aperte Enter andar as posições no tabuleiro.")
 				esperar_enter()
 			} senao {
@@ -327,8 +348,8 @@ programa
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
  * 
- * @POSICAO-CURSOR = 2052; 
- * @DOBRAMENTO-CODIGO = [203, 242, 259, 281, 301];
+ * @POSICAO-CURSOR = 4823; 
+ * @DOBRAMENTO-CODIGO = [224, 263, 280, 302, 322];
  * @PONTOS-DE-PARADA = ;
  * @SIMBOLOS-INSPECIONADOS = ;
  * @FILTRO-ARVORE-TIPOS-DE-DADO = inteiro, real, logico, cadeia, caracter, vazio;
