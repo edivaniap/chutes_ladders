@@ -15,13 +15,11 @@ programa
 	inteiro escadas[MAX_ESCADA][2] = {{5,14},{12,31}, {20,38},{28,84},{36,44},{40,42},{51,67},{71,91},{80,100}}
 	inteiro rampas[MAX_RAMPA][2] = {{98,78},{95,75},{92,73},{87,24},{64,60},{62,19},{56,53},{49,11},{47,26},{16,6}}
 
-	cadeia jogador1="Jogador 1", jogador2 = "Jogador 1", representa_j1="J1", representa_j2="J2"
-	inteiro posicao_j1=1,posicao_j2=1, vitoria_j1, vitoria_j2, rodada_atual
-	
 	funcao inicio()
 	{
+		inicializar_jogo()
 		processo_inicial()
-		esperar_enter()
+    esperar_enter()
 		imprimir_tabuleiro()
 	}
 	
@@ -29,6 +27,16 @@ programa
 	 */
 	funcao vazio inicializar_jogo() {
 		//iniciar variaveis para cada partida
+		jogador1 = "Jogador 1"
+		jogador2 = "Jogador 2"
+		representa_j1 = "J1"
+		representa_j2 = "J2"
+		posicao_j1 = 0;
+		posicao_j2 = 0;
+		vitoria_j1 = 0;
+		vitoria_j2 = 0;
+		empates = 0;
+		rodada_atual = 0;
 	}
 
 	/* 
@@ -102,7 +110,26 @@ programa
 	/* Verifica se o jogo acabou
 	 */
 	funcao logico game_over() {
-		//desenvolver
+		//Não está completo
+		se(posicao_j1 == 100 ou posicao_j2 == 100)
+		{
+			se(posicao_j1 == 100 e posicao_j2 == 100)
+			{
+				escreva("Empate!")
+				empates++;
+			}
+			senao se(posicao_j1 == 100)
+			{
+				escreva("Vitória de " + jogador1 + "!!")
+				vitoria_j1++;
+			}
+			senao
+			{
+				escreva("Vitória de " + jogador2 + "!!")
+				vitoria_j2++;
+			}
+			retorne verdadeiro
+		}
 		retorne falso
 	}
 	
@@ -201,7 +228,7 @@ programa
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
  * 
- * @POSICAO-CURSOR = 204; 
+ * @POSICAO-CURSOR = 1107;
  * @PONTOS-DE-PARADA = ;
  * @SIMBOLOS-INSPECIONADOS = ;
  * @FILTRO-ARVORE-TIPOS-DE-DADO = inteiro, real, logico, cadeia, caracter, vazio;
