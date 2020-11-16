@@ -24,6 +24,8 @@ programa
 	{
 		inicializar_jogo()
 		processo_inicial()	
+		esperar_enter()
+		imprimir_tabuleiro()
 	}
 
 	/*
@@ -157,7 +159,7 @@ programa
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
  * 
- * @POSICAO-CURSOR = 1107; 
+ * @POSICAO-CURSOR = 864; 
  * @PONTOS-DE-PARADA = ;
  * @SIMBOLOS-INSPECIONADOS = ;
  * @FILTRO-ARVORE-TIPOS-DE-DADO = inteiro, real, logico, cadeia, caracter, vazio;
