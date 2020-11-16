@@ -15,8 +15,8 @@ programa
 	inteiro escadas[MAX_ESCADA][2] = {{5,14},{12,31}, {20,38},{28,84},{36,44},{40,42},{51,67},{71,91},{80,100}}
 	inteiro rampas[MAX_RAMPA][2] = {{98,78},{95,75},{92,73},{87,24},{64,60},{62,19},{56,53},{49,11},{47,26},{16,6}}
 
-	cadeia jogador1, jogador2, representa_j1, representa_j2
-	inteiro posicao_j1, posicao_j2, vitoria_j1, vitoria_j2, empates, rodada_atual, d1, d2
+	cadeia jogador1, jogador2, representa_j1, representa_j2, ordem1, ordem2
+	inteiro posicao_j1, posicao_j2, vitoria_j1, vitoria_j2, empates, rodada_atual, d1, d2, primeiro_a_jogar
 	
 	funcao inicio()
 	{
@@ -25,8 +25,6 @@ programa
 		{
 			inicializar_partida()
 			processo_inicial()
-			esperar_enter()
-			imprimir_tabuleiro()
 			processa_rodada()
 		}
 		enquanto(jogar_novamente())
@@ -56,6 +54,9 @@ programa
 		rodada_atual = 0
 		d1 = 0
 		d2 = 0
+		ordem1 = ""
+		ordem2 = ""
+		primeiro_a_jogar = 0
 	}
 
 	/* 
@@ -81,7 +82,8 @@ programa
 			representa_j1 = tx.obter_caracter(jogador1, 0) + " "
 			representa_j2 = tx.obter_caracter(jogador2, 0) + " "
 		}
-		
+		escreva(">> Aperte Enter para iniciar a partida!.")
+		esperar_enter()
 	}
 
 	funcao vazio ordem_jogadores() {
@@ -105,9 +107,9 @@ programa
 				escreva("Empate! Vamos tentar de novo...\n\n") 
 				empate = verdadeiro
 			} senao se (d1 < d2) {
-				cadeia aux = jogador1
-				jogador1 = jogador2
-				jogador2 = aux
+				primeiro_a_jogar = 2
+			} senao { 
+				primeiro_a_jogar = 1
 			}
 		} enquanto(empate)
 
@@ -125,21 +127,37 @@ programa
 		//Ideia de como fazer sem impressão do tabuleiro
 		faca
 		{
+			limpa()
+			imprimir_tabuleiro()
 			rodada_atual++;
+			
 			escreva("=== RODADA ", rodada_atual, " ===\n")
-			escreva(">> ", jogador1, " aperte Enter para jogar o dado.")
-			esperar_enter()
-			d1 = jogar_dados()
-			escreva("Resultado do dado: ", d1, "\n")
-			posicao_j1 += d1
-			posicao_j1 = checar_rampas_escadas(posicao_j1)
-			escreva(">> ", jogador2, " aperte Enter para jogar o dado.")
-			esperar_enter()
-			d2 = jogar_dados()
-			escreva("Resultado do dado: ", d2, "\n")
-			posicao_j2 += d2
-			posicao_j2 = checar_rampas_escadas(posicao_j2)
-			escreva(posicao_j1, " ", posicao_j2, "\n")	
+			se(primeiro_a_jogar == 1) {
+				escreva(">> ", jogador1, " (", posicao_j1,") aperte Enter para jogar o dado.")
+				esperar_enter()
+				d1 = jogar_dados()
+				escreva("Resultado do dado: ", d1, "\n")
+				posicao_j1 += d1
+				posicao_j1 = checar_rampas_escadas(posicao_j1)
+				escreva(">> Aperte Enter andar as posições no tabuleiro.")
+				esperar_enter()
+				
+				limpa()
+				imprimir_tabuleiro()
+			} senao se (primeiro_a_jogar == 2){
+				escreva("=== RODADA ", rodada_atual, " ===\n")
+				escreva(">> ", jogador2, " (", posicao_j2,") aperte Enter para jogar o dado.")
+				esperar_enter()
+				d2 = jogar_dados()
+				escreva("Resultado do dado: ", d2, "\n")
+				posicao_j2 += d2
+				posicao_j2 = checar_rampas_escadas(posicao_j2)
+				escreva(">> Aperte Enter andar as posições no tabuleiro.")
+				esperar_enter()
+			} senao {
+				escreva("Erro: falta definir quem começa primeiro")
+				ordem_jogadores()
+			}
 		}
 		enquanto(game_over())
 	}
@@ -309,8 +327,8 @@ programa
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
  * 
- * @POSICAO-CURSOR = 6823; 
- * @DOBRAMENTO-CODIGO = [36, 50, 62, 86];
+ * @POSICAO-CURSOR = 2052; 
+ * @DOBRAMENTO-CODIGO = [203, 242, 259, 281, 301];
  * @PONTOS-DE-PARADA = ;
  * @SIMBOLOS-INSPECIONADOS = ;
  * @FILTRO-ARVORE-TIPOS-DE-DADO = inteiro, real, logico, cadeia, caracter, vazio;
