@@ -132,11 +132,13 @@ programa
 			d1 = jogar_dados()
 			escreva("Resultado do dado: ", d1, "\n")
 			posicao_j1 += d1
+			posicao_j1 = checar_rampas_escadas(posicao_j1)
 			escreva(">> ", jogador2, " aperte Enter para jogar o dado.")
 			esperar_enter()
 			d2 = jogar_dados()
 			escreva("Resultado do dado: ", d2, "\n")
 			posicao_j2 += d2
+			posicao_j2 = checar_rampas_escadas(posicao_j2)
 			escreva(posicao_j1, " ", posicao_j2, "\n")	
 		}
 		enquanto(game_over())
@@ -264,14 +266,39 @@ programa
 		caracter resposta
 		escreva(">> Deseja jogar novamente?(S/N) ")
 		leia(resposta)
-		se(resposta == 'S')
+		se(resposta == 'S' ou resposta == 's')
 		{
 			retorne verdadeiro
 		}
-		senao
+		senao se(resposta == 'N' ou resposta == 'n')
 		{
 			retorne falso
 		}
+		senao
+		{
+			escreva("Opção inválida...\n")
+			retorne jogar_novamente()
+		}
+	}
+
+	funcao inteiro checar_rampas_escadas(inteiro posicao)
+	{
+		para(inteiro i = 0; i < MAX_RAMPA; i++)
+		{
+			se(posicao == rampas[i][0])
+			{
+				retorne rampas[i][1];
+			}
+		}
+		para(inteiro j = 0; j < MAX_ESCADA; j++)
+		{
+			se(posicao == escadas[j][0])
+			{
+				retorne escadas[j][1]
+			}
+		}
+
+		retorne posicao;
 	}
 }
 
@@ -282,7 +309,8 @@ programa
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
  * 
- * @POSICAO-CURSOR = 1030; 
+ * @POSICAO-CURSOR = 6823; 
+ * @DOBRAMENTO-CODIGO = [36, 50, 62, 86];
  * @PONTOS-DE-PARADA = ;
  * @SIMBOLOS-INSPECIONADOS = ;
  * @FILTRO-ARVORE-TIPOS-DE-DADO = inteiro, real, logico, cadeia, caracter, vazio;
