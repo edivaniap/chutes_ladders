@@ -112,7 +112,26 @@ programa
 	/* Verifica se o jogo acabou
 	 */
 	funcao logico game_over() {
-		//desenvolver
+		//Não está completo
+		se(posicao_j1 == 100 ou posicao_j2 == 100)
+		{
+			se(posicao_j1 == 100 e posicao_j2 == 100)
+			{
+				escreva("Empate!")
+				empates = empates + 1;
+			}
+			senao se(posicao_j1 == 100)
+			{
+				escreva("Vitória de " + jogador1 + "!!")
+				vitoria_j1 = vitoria_j1 + 1;
+			}
+			senao
+			{
+				escreva("Vitória de " + jogador2 + "!!")
+				vitoria_j2 = vitoria_j2 + 1;
+			}
+			retorne verdadeiro
+		}
 		retorne falso
 	}
 	
