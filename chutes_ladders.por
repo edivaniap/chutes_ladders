@@ -4,25 +4,35 @@ programa
 	inclua biblioteca Texto --> tx
 	
 	const caracter ESCADA_INI = '#'
-	const caracter ESCADA_FIM = '"'
-	const caracter RAMPA_INI = '@'
-	const caracter RAMPA_FIM = '/'
+	const caracter ESCADA_FIM = '¨'
+	const caracter RAMPA_INI = '/'
+	const caracter RAMPA_FIM = '\'
+	const caracter J1 = 'A'
+	const caracter J2 = 'B'
 	const inteiro MAX_ESCADA = 9
 	const inteiro MAX_RAMPA = 10
-	const inteiro DIM_TABULEIRO = 10
+	const inteiro TAM_TABULEIRO = 100
 	
 	//posições das escadas e rampas já predefinidas
 	inteiro escadas[MAX_ESCADA][2] = {{5,14},{12,31}, {20,38},{28,84},{36,44},{40,42},{51,67},{71,91},{80,100}}
 	inteiro rampas[MAX_RAMPA][2] = {{98,78},{95,75},{92,73},{87,24},{64,60},{62,19},{56,53},{49,11},{47,26},{16,6}}
 
+	cadeia jogador1, jogador2, representa_j1, representa_j2
+	inteiro posicao_j1,posicao_j2, vitoria_j1, vitoria_j2, empates, rodada_atual
+	
 	funcao inicio()
 	{
 		inicializar_jogo()
-		processo_inicial()
-    esperar_enter()
-		imprimir_tabuleiro()
+		processo_inicial()	
 	}
-	
+
+	/*
+	 * Cria o tabuleiro
+	 */
+	funcao vazio iniciar_tabuleiro(){
+
+		
+	}
 	/* Inicializa os dados do jogo
 	 */
 	funcao vazio inicializar_jogo() {
@@ -42,7 +52,7 @@ programa
 	/* 
 	 */
 	funcao vazio processo_inicial() {
-		escreva("Para jogar Chutes and Ladders é necessário 2 jogadores\n\n")
+		escreva("Para jogar Chutes and Ladders é necessário 2 jogadores\n")
 		
 		escreva(">> Informe o nome de um dos jogadadores: ")
 			leia(jogador1)
@@ -68,7 +78,7 @@ programa
 	funcao vazio ordem_jogadores() {
 		logico empate
 		
-		escreva("Agora, vamos definir a ordem que cada jogador irá jogar\n\n")
+		escreva("Agora, vamos definir a ordem que cada jogador irá jogar\n")
 
 		faca {
 			inteiro d1, d2
@@ -84,7 +94,7 @@ programa
 			empate = falso
 			
 			se(d1 == d2) {
-				escreva("Empate! Vamos tentar de novo...\n\n") 
+				escreva("Empate! Vamos tentar de novo...\n") 
 				empate = verdadeiro
 			} senao se (d1 < d2) {
 				cadeia aux = jogador1
@@ -93,7 +103,7 @@ programa
 			}
 		} enquanto(empate)
 
-		escreva("\n Assim, a ordem de jogadas será: 1º ", jogador1,", 2º ", jogador2, "\n")
+		escreva("\n Assim, a ordem de jogadas será: 1º, ", jogador1,", 2º ", jogador2, "\n")
 	}
 
 	funcao vazio esperar_enter() {
@@ -141,94 +151,13 @@ programa
 		dado = u.sorteia(1, 6)
 		retorne dado
 	}
-
-	/* Imprime o tabuleiro do jogo de acordo com os dados atuais do jogo
-	 * De acordo com as variaveis globais
-	 */
-	funcao vazio imprimir_tabuleiro(){
-		inteiro posicao, aux, sinal = 1
-		para(inteiro i = DIM_TABULEIRO - 1; i >= 0; i--) {
-			sinal *= -1			
-			se (sinal < 0) {
-				aux = DIM_TABULEIRO 
-			} senao {
-				aux = 1
-			}
-
-			cadeia linha1 = "", linha2 = ""
-			
-			para(inteiro j = 0; j < DIM_TABULEIRO; j++) {
-				posicao = (DIM_TABULEIRO * i) + aux
-				aux += sinal
-				
-				linha1 += "[" + posicao
-				se(posicao <= 9) {
-					linha1 += "  ]"
-				} senao se(posicao >= 100) {
-					linha1 += "]"
-				} senao {
-					linha1 += " ]"
-				}
-
-				linha2 += "[" + preencher_espaco_jogador(posicao) + preencher_espaco_objeto(posicao) + "]"
-				
-			}
-			escreva(linha1, "\n", linha2, "\n")
-		}
-	}
-
-	/* Funcao para auxiliar a impressão do tabuleiro. Verifica se algum dos jogadores está
-	 *  na posicao. Se os dois jogadores estiverem na posicao retorna uma cadeia com as duas
-	 *  iniciais do jogador mesmo que sejam iguais. Se não tiver nenhum jogador, retorna uma cadeia
-	 *  com dois espaços em branco.
-	 * - p: posicao a ser verificada
-	 * - retorno: cadeia que vai preencher o espaço do tabuleiro reservado para os jogadores
-	 */
-	funcao cadeia preencher_espaco_jogador(inteiro p) {	
-		se(p == posicao_j1 e p == posicao_j2){
-			retorne "" + tx.obter_caracter(representa_j1, 0) + tx.obter_caracter(representa_j2, 0)
-		} senao se (p == posicao_j1) {
-			retorne representa_j1
-		} senao se (p == posicao_j2) {
-			retorne representa_j2
-		}
-
-		retorne "  "
-	}
-
-	/* Funcao para auxiliar a impressão do tabuleiro. Verifica se há 
-	 *  inicio ou fim de uma escada ou rampa na posicao.
-	 * - p: posicao a ser verificada
-	 * - retorno: caracter que vai preencher o espaço do tabuleiro reservado para escadas e rampas
-	 */
-	funcao caracter preencher_espaco_objeto(inteiro p) {
-		para(inteiro i = 0; i < MAX_ESCADA; i++) {
-			se(p == escadas[i][0]) {
-				retorne ESCADA_INI
-			}
-			se(p == escadas[i][1]) {
-				retorne ESCADA_FIM
-			}
-		}
-
-		para(inteiro i = 0; i < MAX_RAMPA; i++) {
-			se(p == rampas[i][0]) {
-				retorne RAMPA_INI
-			}
-			se(p == rampas[i][1]) {
-				retorne RAMPA_FIM
-			}
-		}
-		
-		retorne ' '
-	}
 }
 /* $$$ Portugol Studio $$$ 
  * 
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
  * 
- * @POSICAO-CURSOR = 1107;
+ * @POSICAO-CURSOR = 1107; 
  * @PONTOS-DE-PARADA = ;
  * @SIMBOLOS-INSPECIONADOS = ;
  * @FILTRO-ARVORE-TIPOS-DE-DADO = inteiro, real, logico, cadeia, caracter, vazio;
