@@ -16,30 +16,46 @@ programa
 	inteiro rampas[MAX_RAMPA][2] = {{98,78},{95,75},{92,73},{87,24},{64,60},{62,19},{56,53},{49,11},{47,26},{16,6}}
 
 	cadeia jogador1, jogador2, representa_j1, representa_j2
-	inteiro posicao_j1, posicao_j2, vitoria_j1, vitoria_j2, empates, rodada_atual
+	inteiro posicao_j1, posicao_j2, vitoria_j1, vitoria_j2, empates, rodada_atual, d1, d2
 	
 	funcao inicio()
 	{
 		inicializar_jogo()
-		processo_inicial()
-		esperar_enter()
-		imprimir_tabuleiro()
+		faca
+		{
+			inicializar_partida()
+			processo_inicial()
+			esperar_enter()
+			imprimir_tabuleiro()
+			processa_rodada()
+		}
+		enquanto(jogar_novamente())
 	}
 	
 	/* Inicializa os dados do jogo
 	 */
 	funcao vazio inicializar_jogo() {
-		//iniciar variaveis para cada partida
+		//iniciar variaveis para o jogo
+
 		jogador1 = "Jogador 1"
 		jogador2 = "Jogador 2"
 		representa_j1 = "J1"
 		representa_j2 = "J2"
-		posicao_j1 = 1;
-		posicao_j2 = 1;
-		vitoria_j1 = 0;
-		vitoria_j2 = 0;
-		empates = 0;
-		rodada_atual = 0;
+		vitoria_j1 = 0
+		vitoria_j2 = 0
+		empates = 0
+		
+		
+	}
+
+	funcao vazio inicializar_partida(){
+		//iniciar variaveis para cada partida
+		
+		posicao_j1 = 1
+		posicao_j2 = 1
+		rodada_atual = 0
+		d1 = 0
+		d2 = 0
 	}
 
 	/* 
@@ -74,7 +90,6 @@ programa
 		escreva("Agora, vamos definir a ordem que cada jogador irá jogar\n\n")
 
 		faca {
-			inteiro d1, d2
 			escreva(">> ", jogador1, ", aperte Enter para jogar o dado.")
 			esperar_enter()
 			d1 = jogar_dados()
@@ -107,33 +122,51 @@ programa
 	/* 
 	 */
 	funcao vazio processa_rodada() {
-		//desenvolver
+		//Ideia de como fazer sem impressão do tabuleiro
+		faca
+		{
+			rodada_atual++;
+			escreva("=== RODADA ", rodada_atual, " ===\n")
+			escreva(">> ", jogador1, " aperte Enter para jogar o dado.")
+			esperar_enter()
+			d1 = jogar_dados()
+			escreva("Resultado do dado: ", d1, "\n")
+			posicao_j1 += d1
+			escreva(">> ", jogador2, " aperte Enter para jogar o dado.")
+			esperar_enter()
+			d2 = jogar_dados()
+			escreva("Resultado do dado: ", d2, "\n")
+			posicao_j2 += d2
+			escreva(posicao_j1, " ", posicao_j2, "\n")	
+		}
+		enquanto(game_over())
 	}
 
 	/* Verifica se o jogo acabou
 	 */
 	funcao logico game_over() {
 		//Não está completo
-		se(posicao_j1 == 100 ou posicao_j2 == 100)
+		se(posicao_j1 >= 100 ou posicao_j2 >= 100)
 		{
-			se(posicao_j1 == 100 e posicao_j2 == 100)
+			se(posicao_j1 >= 100 e posicao_j2 >= 100)
 			{
-				escreva("Empate!")
+				escreva("Empate!\n")
 				empates++;
 			}
-			senao se(posicao_j1 == 100)
+			senao se(posicao_j1 >= 100)
 			{
-				escreva("Vitória de " + jogador1 + "!!")
+				escreva("Vitória de " + jogador1 + "!!\n")
 				vitoria_j1++;
 			}
 			senao
 			{
-				escreva("Vitória de " + jogador2 + "!!")
+				escreva("Vitória de " + jogador2 + "!!\n")
 				vitoria_j2++;
 			}
-			retorne verdadeiro
+			escreva(jogador1, " ganhou ", vitoria_j1, " partida(s), ", jogador2, " ganhou ", vitoria_j2, " partida(s) e tiveram ", empates, " empates!!\n")
+			retorne falso
 		}
-		retorne falso
+		retorne verdadeiro
 	}
 	
 	/* Simula a ação de jogar dados (ou jogar dois dados - decidir), gerando um número aleatório de 1 a 6
@@ -225,13 +258,31 @@ programa
 		
 		retorne ' '
 	}
+
+	funcao logico jogar_novamente()
+	{
+		caracter resposta
+		escreva(">> Deseja jogar novamente?(S/N) ")
+		leia(resposta)
+		se(resposta == 'S')
+		{
+			retorne verdadeiro
+		}
+		senao
+		{
+			retorne falso
+		}
+	}
 }
+
+	
+
 /* $$$ Portugol Studio $$$ 
  * 
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
  * 
- * @POSICAO-CURSOR = 2940; 
+ * @POSICAO-CURSOR = 1030; 
  * @PONTOS-DE-PARADA = ;
  * @SIMBOLOS-INSPECIONADOS = ;
  * @FILTRO-ARVORE-TIPOS-DE-DADO = inteiro, real, logico, cadeia, caracter, vazio;
