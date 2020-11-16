@@ -14,6 +14,9 @@ programa
 	//posições das escadas e rampas já predefinidas
 	inteiro escadas[MAX_ESCADA][2] = {{5,14},{12,31}, {20,38},{28,84},{36,44},{40,42},{51,67},{71,91},{80,100}}
 	inteiro rampas[MAX_RAMPA][2] = {{98,78},{95,75},{92,73},{87,24},{64,60},{62,19},{56,53},{49,11},{47,26},{16,6}}
+	
+	cadeia jogador1, jogador2, representa_j1, representa_j2
+	inteiro posicao_j1,posicao_j2, vitoria_j1, vitoria_j2, empates, rodada_atual
 
 	funcao inicio()
 	{
