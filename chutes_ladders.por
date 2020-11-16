@@ -7,8 +7,6 @@ programa
 	const caracter ESCADA_FIM = '"'
 	const caracter RAMPA_INI = '@'
 	const caracter RAMPA_FIM = '/'
-	const caracter J1 = 'A'
-	const caracter J2 = 'B'
 	const inteiro MAX_ESCADA = 9
 	const inteiro MAX_RAMPA = 10
 	const inteiro DIM_TABULEIRO = 10
@@ -97,7 +95,7 @@ programa
 	
 	/* 
 	 */
-	funcao vazio porcessa_rodada() {
+	funcao vazio processa_rodada() {
 		//desenvolver
 	}
 
@@ -203,7 +201,7 @@ programa
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
  * 
- * @POSICAO-CURSOR = 807; 
+ * @POSICAO-CURSOR = 204; 
  * @PONTOS-DE-PARADA = ;
  * @SIMBOLOS-INSPECIONADOS = ;
  * @FILTRO-ARVORE-TIPOS-DE-DADO = inteiro, real, logico, cadeia, caracter, vazio;
