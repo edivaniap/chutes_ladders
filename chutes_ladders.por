@@ -119,17 +119,17 @@ programa
 			se(posicao_j1 == 100 e posicao_j2 == 100)
 			{
 				escreva("Empate!")
-				empates = empates + 1;
+				empates++;
 			}
 			senao se(posicao_j1 == 100)
 			{
 				escreva("Vitória de " + jogador1 + "!!")
-				vitoria_j1 = vitoria_j1 + 1;
+				vitoria_j1++;
 			}
 			senao
 			{
 				escreva("Vitória de " + jogador2 + "!!")
-				vitoria_j2 = vitoria_j2 + 1;
+				vitoria_j2++;
 			}
 			retorne verdadeiro
 		}
@@ -231,7 +231,7 @@ programa
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
  * 
- * @POSICAO-CURSOR = 751; 
+ * @POSICAO-CURSOR = 2940; 
  * @PONTOS-DE-PARADA = ;
  * @SIMBOLOS-INSPECIONADOS = ;
  * @FILTRO-ARVORE-TIPOS-DE-DADO = inteiro, real, logico, cadeia, caracter, vazio;
