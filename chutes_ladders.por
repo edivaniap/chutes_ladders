@@ -34,8 +34,8 @@ programa
 		jogador2 = "Jogador 2"
 		representa_j1 = "J1"
 		representa_j2 = "J2"
-		posicao_j1 = 1;
-		posicao_j2 = 1;
+		posicao_j1 = 0;
+		posicao_j2 = 0;
 		vitoria_j1 = 0;
 		vitoria_j2 = 0;
 		empates = 0;
@@ -242,7 +242,7 @@ programa
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
  * 
- * @POSICAO-CURSOR = 629; 
+ * @POSICAO-CURSOR = 1061; 
  * @PONTOS-DE-PARADA = ;
  * @SIMBOLOS-INSPECIONADOS = ;
  * @FILTRO-ARVORE-TIPOS-DE-DADO = inteiro, real, logico, cadeia, caracter, vazio;
