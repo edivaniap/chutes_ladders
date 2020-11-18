@@ -16,7 +16,7 @@ programa
 	inteiro rampas[MAX_RAMPA][2] = {{98,78},{95,75},{92,73},{87,24},{64,60},{62,19},{56,53},{49,11},{47,26},{16,6}}
 
 	cadeia jogador1, jogador2, representa_j1, representa_j2
-	inteiro posicao_j1, posicao_j2, vitoria_j1, vitoria_j2, empates, rodada_atual, d1, d2, primeiro_a_jogar
+	inteiro posicao_j1, posicao_j2, vitoria_j1, vitoria_j2, empates, rodada_atual, primeiro_a_jogar
 	
 	funcao inicio()
 	{
@@ -52,8 +52,6 @@ programa
 		posicao_j1 = 1
 		posicao_j2 = 1
 		rodada_atual = 0
-		d1 = 0
-		d2 = 0
 		primeiro_a_jogar = 0
 	}
 
@@ -81,30 +79,33 @@ programa
 
 	funcao vazio ordem_jogadores() {
 		logico empate
+		inteiro dado1, dado2
+		
 		limpa()
 		escreva("Agora, vamos definir a ordem que cada jogador irá jogar\n\n")
-
+		
 		faca {
 			escreva(">> ", jogador1, ", aperte Enter para jogar o dado.")
 			esperar_enter()
-			d1 = jogar_dados()
-			escreva("Resultado do dado: ", d1, "\n")
+			dado1 = jogar_dados()
+			escreva("Resultado do dado: ", dado1, "\n")
+			
 			escreva(">> ", jogador2, ", aperte Enter para jogar o dado.")
 			esperar_enter()
-			d2 = jogar_dados()
-			escreva("Resultado do dado: ", d2, "\n")
+			dado2 = jogar_dados()
+			escreva("Resultado do dado: ", dado2, "\n")
 			
 			empate = falso
 			
-			se(d1 == d2) {
+			se(dado1 == dado2) {
 				escreva("Empate! Vamos tentar de novo...\n\n") 
 				empate = verdadeiro
-			} senao se (d1 < d2) {
+			} senao se (dado1 < dado2) {
 				primeiro_a_jogar = 2
 				escreva("\nAssim, a ordem de jogadas será: 1º ", jogador2,", 2º ", jogador1, "\n")
 			} senao { 
 				primeiro_a_jogar = 1
-				escreva("\nAssim, a ordem de jogadas será: 1º ", jogador2,", 2º ", jogador1, "\n")
+				escreva("\nAssim, a ordem de jogadas será: 1º ", jogador1,", 2º ", jogador2, "\n")
 			}
 		} enquanto(empate)
 		
@@ -120,81 +121,60 @@ programa
 	/* 
 	 */
 	funcao vazio processa_rodada() {
-		//Ideia de como fazer sem impressão do tabuleiro
+		limpa()
+		imprimir_tabuleiro()
+		
 		faca
-		{
-			limpa()
-			imprimir_tabuleiro()
-				
+		{	
 			rodada_atual++;
 			
 			
 			se(primeiro_a_jogar == 1) {
-				escreva("=== RODADA ", rodada_atual, " ===\n")
-				escreva(">> ", jogador1, " (", posicao_j1,") aperte Enter para jogar o dado.")
-				esperar_enter()
-				d1 = jogar_dados()
-				escreva("Resultado do dado: ", d1, "\n")
-				posicao_j1 += d1
-				posicao_j1 = checar_rampas_escadas(posicao_j1)
-				escreva(">> Aperte Enter andar as posições no tabuleiro.")
-				esperar_enter()
-				
-				limpa()
-				imprimir_tabuleiro()
-
-				escreva("=== RODADA ", rodada_atual, " ===\n")
-				escreva(">> ", jogador2, " (", posicao_j2,") aperte Enter para jogar o dado.")
-				esperar_enter()
-				d2 = jogar_dados()
-				escreva("Resultado do dado: ", d2, "\n")
-				posicao_j2 += d2
-				posicao_j2 = checar_rampas_escadas(posicao_j2)
-				escreva(">> Aperte Enter andar as posições no tabuleiro.")
-				esperar_enter()
+				executar_rodada(posicao_j1, jogador1, jogador2)
+				executar_rodada(posicao_j2, jogador2, jogador1)
 			} senao se (primeiro_a_jogar == 2){
-				escreva("=== RODADA ", rodada_atual, " ===\n")
-				escreva(">> ", jogador2, " (", posicao_j2,") aperte Enter para jogar o dado.")
-				esperar_enter()
-				d2 = jogar_dados()
-				escreva("Resultado do dado: ", d2, "\n")
-				posicao_j2 += d2
-				posicao_j2 = checar_rampas_escadas(posicao_j2)
-				escreva(">> Aperte Enter andar as posições no tabuleiro.")
-				esperar_enter()
-				
-				limpa()
-				imprimir_tabuleiro()
-				
-				escreva("=== RODADA ", rodada_atual, " ===\n")
-				escreva(">> ", jogador1, " (", posicao_j1,") aperte Enter para jogar o dado.")
-				esperar_enter()
-				d1 = jogar_dados()
-				escreva("Resultado do dado: ", d1, "\n")
-				posicao_j1 += d1
-				posicao_j1 = checar_rampas_escadas(posicao_j1)
-				escreva(">> Aperte Enter andar as posições no tabuleiro.")
-				esperar_enter()
+				executar_rodada(posicao_j2, jogador2, jogador1)
+				executar_rodada(posicao_j1, jogador1, jogador2)
 			} senao {
 				escreva("Erro: falta definir quem começa primeiro")
 				ordem_jogadores()
+				rodada_atual--
 			}
 		}
 		enquanto(game_over())
 	}
 
+	funcao vazio executar_rodada(inteiro & posicao_jogador_atual, cadeia jogador_atual, cadeia proximo_jogador) {
+		escreva("\n
+		\t=== RODADA ", rodada_atual, " ===\n")
+		escreva(">> ", jogador_atual, " (posição: ",posicao_jogador_atual,") aperte Enter para jogar o dado.")
+		esperar_enter()
+		
+		inteiro dado = jogar_dados()
+		escreva("Resultado do dado: ", dado, "\n")
+		posicao_jogador_atual += dado
+		escreva("Nova posição: ", posicao_jogador_atual, "\n")
+		posicao_jogador_atual = checar_rampas_escadas(posicao_jogador_atual)
+		
+		escreva(">> Aperte Enter andar as posições no tabuleiro e passar a vez para ",proximo_jogador,".")
+		esperar_enter()
+				
+		limpa()
+		imprimir_tabuleiro()
+	}
+
 	/* Verifica se o jogo acabou
 	 */
 	funcao logico game_over() {
-		//Não está completo
-		se(posicao_j1 >= 100 ou posicao_j2 >= 100)
+		inteiro tam_tabuleiro = DIM_TABULEIRO * DIM_TABULEIRO
+		se(posicao_j1 >= tam_tabuleiro ou posicao_j2 >= tam_tabuleiro)
 		{
-			se(posicao_j1 >= 100 e posicao_j2 >= 100)
+			se(posicao_j1 >= tam_tabuleiro e posicao_j2 >= tam_tabuleiro)
 			{
 				escreva("Empate!\n")
 				empates++;
 			}
-			senao se(posicao_j1 >= 100)
+			senao se(posicao_j1 >= tam_tabuleiro)
 			{
 				escreva("Vitória de " + jogador1 + "!!\n")
 				vitoria_j1++;
@@ -224,6 +204,14 @@ programa
 	 */
 	funcao vazio imprimir_tabuleiro(){
 		inteiro posicao, aux, sinal = 1
+
+		//legendas
+		escreva("\t\t\t*********** Chutes and Ladders ***********\n")
+		escreva("\tLegenda: [",ESCADA_INI," Inicio de uma escada] [",ESCADA_FIM," Fim de uma escada]\n")
+		escreva("\t\t [",RAMPA_INI," Inicio de uma rampa] [",RAMPA_FIM," Fim de uma rampa]\n")
+		escreva("\t\t [",representa_j1," Peça de ",jogador1,"] [",representa_j2," Peça de ",jogador2,"]\n\n")
+
+		//tabuleiro		
 		para(inteiro i = DIM_TABULEIRO - 1; i >= 0; i--) {
 			sinal *= -1			
 			se (sinal < 0) {
@@ -326,6 +314,7 @@ programa
 		{
 			se(posicao == rampas[i][0])
 			{
+				escreva("Eita, você parou numa rampa e escorregou para posição ", rampas[i][1],"\n")
 				retorne rampas[i][1];
 			}
 		}
@@ -333,6 +322,7 @@ programa
 		{
 			se(posicao == escadas[j][0])
 			{
+				escreva("Carpe diem! Você parou numa escada e subiu para posição ", escadas[j][1],"\n")
 				retorne escadas[j][1]
 			}
 		}
@@ -348,8 +338,8 @@ programa
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
  * 
- * @POSICAO-CURSOR = 4823; 
- * @DOBRAMENTO-CODIGO = [224, 263, 280, 302, 322];
+ * @POSICAO-CURSOR = 298; 
+ * @DOBRAMENTO-CODIGO = [35, 59, 115, 122, 146, 167, 195, 204, 251, 268, 290, 310];
  * @PONTOS-DE-PARADA = ;
  * @SIMBOLOS-INSPECIONADOS = ;
  * @FILTRO-ARVORE-TIPOS-DE-DADO = inteiro, real, logico, cadeia, caracter, vazio;
