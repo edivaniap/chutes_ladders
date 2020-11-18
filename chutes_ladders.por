@@ -31,11 +31,9 @@ programa
 		enquanto(jogar_novamente())
 	}
 	
-	/* Inicializa os dados do jogo
+	/* Inicializa variaveis para o jogo
 	 */
 	funcao vazio inicializar_jogo() {
-		//iniciar variaveis para o jogo
-
 		jogador1 = "Jogador 1"
 		jogador2 = "Jogador 2"
 		representa_j1 = "J1"
@@ -43,28 +41,28 @@ programa
 		vitoria_j1 = 0
 		vitoria_j2 = 0
 		empates = 0
-		
-		
 	}
 
-	funcao vazio inicializar_partida(){
-		//iniciar variaveis para cada partida	
+	/* Inicializa variaveis para cada partida
+	 */
+	funcao vazio inicializar_partida() {	
 		posicao_j1 = 1
 		posicao_j2 = 1
 		rodada_atual = 0
 		primeiro_a_jogar = 0
 	}
 
-	/* 
+	/* Obtem nome dos jogadores e define a representação do jogador no tabuleiro.
+	 * A representação será a inicial de cada nome. Caso tenham mesmas iniciais, numera a representação com 1 e 2.
 	 */
 	funcao vazio processo_inicial() {
 		escreva("Para jogar Chutes and Ladders é necessário 2 jogadores\n\n")
 		
 		escreva(">> Informe o nome de um dos jogadadores: ")
-			leia(jogador1)
+		leia(jogador1)
 			
 		escreva(">> Informe o nome do outro jogadador: ")
-			leia(jogador2)
+		leia(jogador2)
 
 		//representacao dos jogadores no tabuleiro
 		se(tx.obter_caracter(jogador1, 0) == tx.obter_caracter(jogador2, 0)) {
@@ -74,9 +72,11 @@ programa
 			representa_j1 = tx.obter_caracter(jogador1, 0) + " "
 			representa_j2 = tx.obter_caracter(jogador2, 0) + " "
 		}
-		
 	}
 
+	/* Define a ordem de jogada de cada jogador. Os dois jogam o dado, 
+	 * quem tirar o maior numero começa primeiro. Em caso de empate, repetir o processo.
+	 */
 	funcao vazio ordem_jogadores() {
 		logico empate
 		inteiro dado1, dado2
@@ -113,12 +113,15 @@ programa
 		esperar_enter()
 	}
 
+	/* Improviso para esperar o comando do usuário para realizar ações no jogo
+	 */
 	funcao vazio esperar_enter() {
 		cadeia enter
 		leia(enter)
 	}
 	
-	/* 
+	/* Processo de cada rodada: mostrar tabuleiro, pedir que os jogadores joguem seus dados 
+	 *  respeitando a ordem de jogada, calcula a nova posição, e mostra tabuleiro novamente.
 	 */
 	funcao vazio processa_rodada() {
 		limpa()
@@ -127,8 +130,7 @@ programa
 		faca
 		{	
 			rodada_atual++;
-			
-			
+						
 			se(primeiro_a_jogar == 1) {
 				executar_rodada(posicao_j1, jogador1, jogador2)
 				executar_rodada(posicao_j2, jogador2, jogador1)
@@ -136,17 +138,25 @@ programa
 				executar_rodada(posicao_j2, jogador2, jogador1)
 				executar_rodada(posicao_j1, jogador1, jogador2)
 			} senao {
-				escreva("Erro: falta definir quem começa primeiro")
+				escreva("Erro: falta definir quem começa primeiro! Tecle Enter...\n")
+				esperar_enter()
 				ordem_jogadores()
-				rodada_atual--
+				rodada_atual-- //volta uma rodada para começar de novo
 			}
 		}
 		enquanto(game_over())
 	}
-
+	
+	/* Auxilia processa_rodada(), fazendo a interação com o usuário de cada rodada.
+	 * Atualiza o valor da posição do jogador do momento de acordo com o dado jogado e
+	 * a checagem de existencia de rampa ou escada. Ao final, sempre reimprime o tabuleiro.
+	 * 
+	 * - posicao_jogador_atual: ponteiro para a posição do jogador da vez, usado para atualizar o valor da "fonte"
+	 * - jogador_atual: nome do atual jogador da rodada
+	 * - proximo_jogador: nome do próximo jogador da rodada
+	 */
 	funcao vazio executar_rodada(inteiro & posicao_jogador_atual, cadeia jogador_atual, cadeia proximo_jogador) {
-		escreva("\n
-		\t=== RODADA ", rodada_atual, " ===\n")
+		escreva("\n\t=== RODADA ", rodada_atual, " ===\n")
 		escreva(">> ", jogador_atual, " (posição: ",posicao_jogador_atual,") aperte Enter para jogar o dado.")
 		esperar_enter()
 		
@@ -163,7 +173,9 @@ programa
 		imprimir_tabuleiro()
 	}
 
-	/* Verifica se o jogo acabou
+	/* Verifica se o jogo acabou. Se acabou, conta número de vitórias ou empates.
+	 *  
+	 * - retorno: Verdadeiro caso o jogo continue, Falso caso o jogo tenha acabado
 	 */
 	funcao logico game_over() {
 		inteiro tam_tabuleiro = DIM_TABULEIRO * DIM_TABULEIRO
@@ -190,7 +202,8 @@ programa
 		retorne verdadeiro
 	}
 	
-	/* Simula a ação de jogar dados (ou jogar dois dados - decidir), gerando um número aleatório de 1 a 6
+	/* Simula a ação de jogar um dado, gerando um número aleatório de 1 a 6
+	 *  
 	 * - retorno: resultado dos dados
 	 */
 	funcao inteiro jogar_dados() {
@@ -199,10 +212,12 @@ programa
 		retorne dado
 	}
 
-	/* Imprime o tabuleiro do jogo de acordo com os dados atuais do jogo
-	 * De acordo com as variaveis globais
+	/* Imprime o tabuleiro do jogo de acordo com os dados atuais do jogo (variaveis globais).
+	 * Gera um tabuleiro quadrado, a partir de uma dimensão, com ordem da numeração de cada 
+	 * celula no estilo dos tabuleiros deste jogo.
+	 * Apresenta título do jogo e legendas.
 	 */
-	funcao vazio imprimir_tabuleiro(){
+	funcao vazio imprimir_tabuleiro() {
 		inteiro posicao, aux, sinal = 1
 
 		//legendas
@@ -288,16 +303,21 @@ programa
 		retorne ' '
 	}
 
+	/* Questiona de jogadores querem disputar mais uma partida
+	 *  
+	 * - retorno: Verdadeiro caso sim, Falso caso não
+	 */
 	funcao logico jogar_novamente()
 	{
-		caracter resposta
+		//uso de cadeia, pois com caracter se teclar enter sem ter digitado nada causa um erro
+		cadeia resposta
 		escreva(">> Deseja jogar novamente?(S/N) ")
 		leia(resposta)
-		se(resposta == 'S' ou resposta == 's')
+		se(resposta == "S" ou resposta == "s")
 		{
 			retorne verdadeiro
 		}
-		senao se(resposta == 'N' ou resposta == 'n')
+		senao se(resposta == "N" ou resposta == "n")
 		{
 			retorne falso
 		}
@@ -308,6 +328,11 @@ programa
 		}
 	}
 
+	/* Analisa se há inicio de uma rampa ou uma escada dada a posição do jogador.
+	 * Caso sim, mostra mensagem informando se o jagor subiu uma escada ou desceu uma rampa.
+	 * 
+	 * retorno: mesma posição ou nova posição
+	 */
 	funcao inteiro checar_rampas_escadas(inteiro posicao)
 	{
 		para(inteiro i = 0; i < MAX_RAMPA; i++)
@@ -338,8 +363,8 @@ programa
  * Esta seção do arquivo guarda informações do Portugol Studio.
  * Você pode apagá-la se estiver utilizando outro editor.
  * 
- * @POSICAO-CURSOR = 298; 
- * @DOBRAMENTO-CODIGO = [35, 59, 115, 122, 146, 167, 195, 204, 251, 268, 290, 310];
+ * @POSICAO-CURSOR = 9340; 
+ * @DOBRAMENTO-CODIGO = [35, 47, 57, 79, 117, 125, 157, 179, 208, 219, 266, 283, 309, 335];
  * @PONTOS-DE-PARADA = ;
  * @SIMBOLOS-INSPECIONADOS = ;
  * @FILTRO-ARVORE-TIPOS-DE-DADO = inteiro, real, logico, cadeia, caracter, vazio;
