@@ -1,0 +1,9 @@
+Elô vs. Natália >>> Natália
+Flor vs. Gui >>> Gui
+Elô vs. Gui >>> Gui
+Manoel vs. João >>> Manoel
+Manoel vs. João >>> Manoel
+Natália vs. Flor >>> Flor
+Mariana vs. Neto >>> Neto
+Caio vs. Vanessa >>> Vanessa
+Teste vs. Testador >>> Testador

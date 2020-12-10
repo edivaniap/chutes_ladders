@@ -4,6 +4,8 @@ programa
 	inclua biblioteca Util --> u
 	inclua biblioteca Texto --> tx
 	inclua biblioteca Teclado --> t
+	inclua biblioteca Arquivos --> arq
+	
 	const caracter ESCADA_INI = '#'
 	const caracter ESCADA_FIM = '"'
 	const caracter RAMPA_INI = '@'
@@ -12,7 +14,7 @@ programa
 	const inteiro MAX_RAMPA = 9
 	const inteiro DIM_TABULEIRO = 10
 	
-	//posições das escadas e rampas já predefinidas
+	//posições das escadas e rampas predefinidas de acordo com a imagem do tabuleiro usada
 	inteiro escadas[MAX_ESCADA][2] = {{5,14},{12,31},{20,38},{28,84},{36,44},{40,42}, {51,67},{71,91},{80,100}}
 	inteiro rampas[MAX_RAMPA][2] = {{98,78},{95,75},{92,73},{87,24},{64,60},{59,17},{49,11},{47,26},{16,6}}
 
@@ -21,18 +23,16 @@ programa
 	inteiro vez_do_jogador = 1
 	funcao inicio()
 	{
-		inicializar_partida()
 		inicializar_jogo()
 		processo_inicial()
-		ordem_jogadores()
-		imprimir_tabuleiro_grafico()
-		//faca
-		//{
-		//	inicializar_partida()
-		//	ordem_jogadores()
-		//	processa_rodada()
-		//}
-		//enquanto(jogar_novamente())
+		
+		faca
+		{
+			inicializar_partida()
+			ordem_jogadores()
+			imprimir_tabuleiro_grafico()
+		}
+		enquanto(jogar_novamente())
 	}
 	
 	/* Inicializa variaveis para o jogo
@@ -187,28 +187,41 @@ programa
 	 * - retorno: Verdadeiro caso o jogo continue, Falso caso o jogo tenha acabado
 	 */
 	funcao logico game_over() {
-		inteiro tam_tabuleiro = DIM_TABULEIRO * DIM_TABULEIRO
-		se(vez_do_jogador == primeiro_a_jogar){
-				se(posicao_j1 > 99 e posicao_j2 > 99){
-					escreva("Foi empate")
-					empates++
-					g.renderizar()
-					u.aguarde(500)
-					retorne verdadeiro
-				}senao se(posicao_j1 > 99){
-					escreva("O Jogador :"+ jogador1 +" ganhouu!!!!")
-					vitoria_j1++
-					g.renderizar()
-					u.aguarde(500)
-					retorne verdadeiro	
-				}senao se(posicao_j2 > 99){
-					escreva("O Jogador :"+ jogador2 +" ganhouu!!!!")
-					vitoria_j2++
-					g.renderizar()
-					u.aguarde(500)
-					retorne verdadeiro
-				}
+		se(vez_do_jogador == primeiro_a_jogar e (posicao_j1 > 99 ou posicao_j2 > 99)) {
+			
+			inteiro arquivo = arq.abrir_arquivo("./historico.txt", arq.MODO_ACRESCENTAR)
+
+			g.definir_cor(g.COR_BRANCO)
+			g.definir_estilo_texto(falso, verdadeiro, falso)
+			g.desenhar_texto(220, 230, jogador1 + " vs. " + jogador2 )
+			
+			se(posicao_j1 > 99 e posicao_j2 > 99){
+				arq.escrever_linha(jogador1 + " vs. " + jogador2 + " >>> Empate", arquivo)
+				g.definir_cor(g.COR_AMARELO)
+				g.desenhar_texto(220, 250, "Houve um empate!!!" )
+				escreva("Foi empate")
+				empates++
+			}senao se(posicao_j1 > 99){
+				arq.escrever_linha(jogador1 + " vs. " + jogador2 + " >>> " + jogador1, arquivo)
+				g.definir_cor(g.COR_VERDE)
+				g.desenhar_texto(220, 250, jogador1 + " venceu!!!  \\o/" )
+				escreva("O Jogador: "+ jogador1 +" ganhouu!!!!")
+				vitoria_j1++
+			}senao se(posicao_j2 > 99){
+				arq.escrever_linha(jogador1 + " vs. " + jogador2 + " >>> " + jogador2, arquivo)
+				g.definir_cor(g.COR_VERDE)
+				g.desenhar_texto(220, 250, jogador2 + " venceu!!!  \\o/" )
+				escreva("O Jogador: "+ jogador2 +" ganhouu!!!!")
+				vitoria_j2++
 			}
+			
+			arq.fechar_arquivo(arquivo)
+
+			g.renderizar()
+			u.aguarde(5000)
+			
+			retorne verdadeiro
+		}
 		retorne falso
 	}
 	
@@ -321,7 +334,7 @@ programa
 	{
 		//uso de cadeia, pois com caracter se teclar enter sem ter digitado nada causa um erro
 		cadeia resposta
-		escreva(">> Deseja jogar novamente?(S/N) ")
+		escreva("\n>> Deseja jogar novamente?(S/N) ")
 		leia(resposta)
 		se(resposta == "S" ou resposta == "s")
 		{
@@ -351,7 +364,7 @@ programa
 			{
 				
 				//escreva("Eita, você parou numa rampa e escorregou para posição ", rampas[i][1],"\n")
-				retorne rampas[i][1];
+				retorne rampas[i][1]
 			}
 		}
 		para(inteiro j = 0; j < MAX_ESCADA; j++)
@@ -364,7 +377,7 @@ programa
 			}
 		}
 
-		retorne posicao;
+		retorne posicao
 	}
 
 	/*
@@ -373,7 +386,9 @@ programa
 	funcao vazio imprimir_tabuleiro_grafico(){
 		g.definir_cor(g.COR_BRANCO)
 		g.iniciar_modo_grafico(verdadeiro)
-		g.definir_dimensoes_janela(750, 500)
+		g.definir_dimensoes_janela(800, 500)
+		g.definir_titulo_janela("Escadas e Rampas")
+		g.definir_icone_janela(g.carregar_imagem("./icon.png"))
 		inteiro posicao_x = 10
 		//Contem os tabuleiros,pinos e dados
 		inteiro tabuleiro = g.carregar_imagem("./tabuleiro.png")
@@ -390,7 +405,7 @@ programa
 		{	
 			//Define o tabuleiro com fundo banco pra texto ser inserido na lateral com informações
 			g.definir_cor(g.COR_BRANCO)
-			g.desenhar_retangulo(0, 0, 750, 500, falso, verdadeiro)
+			g.desenhar_retangulo(0, 0, 800, 500, falso, verdadeiro)
 			g.desenhar_imagem(0, 0, tabuleiro)
 			//Pega as posições dos jogadores no tabuleiro
 			g.desenhar_imagem(calcula_x_jogador(posicao_j1), calcula_y_jogador(posicao_j1), pino1)
@@ -398,10 +413,10 @@ programa
 			g.definir_cor(g.COR_PRETO)
 			g.definir_estilo_texto(falso, verdadeiro, falso)
 			//Texto com informações sendo escritos no tabuleiro
-			g.desenhar_texto(510, 10, "Para girar dado aperte Enter")
-			g.desenhar_texto(510, 30, "Degivice para jogador:"+ jogador1 +" Pos:" + posicao_j1)
-			g.desenhar_texto(510, 50, "Pokebola para jogador:"+ jogador2 +" Pos:" + posicao_j2)
-			g.desenhar_texto(510, 70, jogador_para_jogar())
+			g.desenhar_texto(520, 50, "Para girar dado aperte Enter")
+			g.desenhar_texto(520, 70, "Degivice para jogador: "+ jogador1 + " Pos: " + posicao_j1)
+			g.desenhar_texto(520, 90, "Pokebola para jogador: "+ jogador2 + " Pos: " + posicao_j2)
+			g.desenhar_texto(520, 130, jogador_para_jogar())
 			
 			/*
 			 * Executa a jogada toda vez que aperta enter
@@ -427,23 +442,51 @@ programa
 			g.renderizar()
 			
 		}enquanto(nao game_over())
+
+		//mostra tela com historico
+		mostrar_historico()
 		g.encerrar_modo_grafico()
 	}
+
+	funcao vazio mostrar_historico() {
+		inteiro arquivo = arq.abrir_arquivo("./historico.txt", arq.MODO_LEITURA)
+		g.definir_cor(g.COR_VERDE)
+		g.definir_estilo_texto(falso, verdadeiro, falso)
+		g.desenhar_texto(150, 50, "Histórico de partidas: ")
+		g.definir_cor(g.COR_BRANCO)
+
+		inteiro i =0
+		enquanto(nao arq.fim_arquivo(arquivo)) {
+			g.desenhar_texto(200, 80 + (i * 20), arq.ler_linha(arquivo))
+			i++
+		}
+		arq.fechar_arquivo(arquivo)
+
+		g.definir_cor(g.COR_VERMELHO)
+		g.desenhar_texto(520, 470, "Tecle ESC para prosseguir")
+		g.renderizar()
+
+		//espera tecla esc para poder continuar com execução
+		enquanto (nao t.tecla_pressionada(t.TECLA_ESC)) {
+			u.aguarde(500)
+		}
+	}
+	
 	/*
 	 * Retorna uma cadeia com qual jogador vai jogar
 	 */
 	funcao cadeia jogador_para_jogar(){
 		se (vez_do_jogador == 1){
 			se(primeiro_a_jogar == 1){
-				retorne "Vez do jogador:" + jogador1
+				retorne "Vez do jogador: " + jogador1
 			}senao{
-				retorne "Vez do jogador:" + jogador2
+				retorne "Vez do jogador: " + jogador2
 			}
 		}senao{
 			se(primeiro_a_jogar == 1){
-				retorne "Vez do jogador:" + jogador2
+				retorne "Vez do jogador: " + jogador2
 			}senao{
-				retorne "Vez do jogador:" + jogador1
+				retorne "Vez do jogador: " + jogador1
 			}
 		}
 	}
@@ -483,3 +526,15 @@ programa
 }
 
 	
+
+/* $$$ Portugol Studio $$$ 
+ * 
+ * Esta seção do arquivo guarda informações do Portugol Studio.
+ * Você pode apagá-la se estiver utilizando outro editor.
+ * 
+ * @POSICAO-CURSOR = 14640; 
+ * @PONTOS-DE-PARADA = ;
+ * @SIMBOLOS-INSPECIONADOS = ;
+ * @FILTRO-ARVORE-TIPOS-DE-DADO = inteiro, real, logico, cadeia, caracter, vazio;
+ * @FILTRO-ARVORE-TIPOS-DE-SIMBOLO = variavel, vetor, matriz, funcao;
+ */
